@@ -24,10 +24,19 @@ public class ConnectToPostgreSQL {
                 "cbhtytdtymrbq");
     }
 
-    public JSONObject getResultElectricMeter(String query) throws JSONException {
-        ResultForElectricMeter resultForElectricMeter =
-                new ResultForElectricMeter();
-        return resultForElectricMeter.getForHour(connection, query);
+    public JSONObject getResultFromMeter(String tableName, String interval) throws JSONException {
+        JSONObject jsonObjectResult = new JSONObject();
+        switch (tableName) {
+            case "ElectricMeter":
+                ResultForElectricMeter resultForElectricMeter =
+                        new ResultForElectricMeter();
+                jsonObjectResult =
+                        resultForElectricMeter.getResultFromMeter(connection, interval);
+                break;
+            case "GasMeter":
+                break;
+        }
+        return jsonObjectResult;
     }
 
 }
