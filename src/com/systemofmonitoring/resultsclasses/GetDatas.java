@@ -1,4 +1,4 @@
-package com.systemofmonitoring.connecttodb;
+package com.systemofmonitoring.resultsclasses;
 
 
 import org.json.JSONException;
