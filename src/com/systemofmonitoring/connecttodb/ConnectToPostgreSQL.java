@@ -1,6 +1,7 @@
 package com.systemofmonitoring.connecttodb;
 
 import com.systemofmonitoring.resultsclasses.ResultForElectricMeter;
+import com.systemofmonitoring.resultsclasses.ResultForMeters;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,28 +28,25 @@ public class ConnectToPostgreSQL {
     public JSONObject getResultFromMeter(String tableName, String interval) throws JSONException {
         System.out.println("Yess 2" + " " + interval);
         JSONObject jsonObjectResult = new JSONObject();
-       // switch (tableName) {
-           // case "ElectricMeter":
-                jsonObjectResult =
-                        ResultForElectricMeter.getResultFromMeter(connection, tableName, interval);
-              //  break;
-           // case "GasMeter":
-              //  break;
-        //}
+        if (tableName.contains("Electric"))
+            jsonObjectResult =
+                    ResultForElectricMeter.getResultFromMeter(connection, tableName, interval);
+        else if (tableName.contains("Gas"))
+            jsonObjectResult =
+                    ResultForMeters.getResultFromMeter(connection, tableName, interval);
+
         return jsonObjectResult;
     }
 
     public JSONObject getResultFromMeter(String tableName, String interval, String date) throws JSONException {
         System.out.println("Yess 2d" + " " + interval);
         JSONObject jsonObjectResult = new JSONObject();
-        //switch (tableName) {
-            //case "ElectricMeter":
+        if (tableName.contains("Electric"))
                 jsonObjectResult =
                         ResultForElectricMeter.getResultFromMeter(connection, tableName, interval, date);
-               // break;
-           // case "GasMeter":
-              //  break;
-       // }
+        else if (tableName.contains("Gas"))
+                jsonObjectResult =
+                        ResultForMeters.getResultFromMeter(connection, tableName, interval, date);
         return jsonObjectResult;
     }
 

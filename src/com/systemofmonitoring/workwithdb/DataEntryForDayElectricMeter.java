@@ -1,8 +1,7 @@
 package com.systemofmonitoring.workwithdb;
 
-
 import com.systemofmonitoring.connecttodb.ConnectToPostgreSQL;
-import com.systemofmonitoring.resultsclasses.GetDatas;
+import com.systemofmonitoring.resultsclasses.GetDatasForElectricMeter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,14 +10,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 
 public class DataEntryForDayElectricMeter {
     private Connection connection;
     private static JSONObject jsonObject = new JSONObject();
     JSONArray date, time, active, passive;
-    ArrayList<String> dateArray, timeArray;
-    ArrayList<Double> activeArray, passiveArray;
     private StringBuffer query;
 
     public void InitArrays() throws JSONException {
@@ -32,30 +29,60 @@ public class DataEntryForDayElectricMeter {
         return ConnectToPostgreSQL.getConnection();
     }
 
-    private void getDatasFromMeter() throws JSONException, SQLException {
-        jsonObject =
-                GetDatas.DisplaceResultForDay(getConnection());
+    private void getDatasFromMeter(String interval) throws JSONException, SQLException {
+        switch (interval) {
+            case "day":
+                jsonObject =
+                        GetDatasForElectricMeter.DisplaceResultForDay(getConnection());
+                break;
+            case "week":
+                jsonObject = GetDatasForElectricMeter.DisplaceResultForWeek(getConnection());
+                break;
+        }
         InitArrays();
     }
 
-    public void DisplaceDatas() throws JSONException, SQLException {
-        getDatasFromMeter();
+    public void DisplaceDatasForDay() throws JSONException, SQLException {
+        getDatasFromMeter("day");
 
         PreparedStatement preparedStatement;
 
         for (int i = 0; i < date.length(); i++) {
-            if (checkDuplicate(date.getString(i))) {
+            if (checkDuplicate(time.getString(i))) {
                 query.append("insert into \"ElectricMeterForDay\" ")
                         .append("(id, sysdate, systime, value_active, value_passive) ")
                         .append("values")
                         .append("(nextval('emd_sequence'), ?, ?, ?, ?)");
 
-            preparedStatement = connection.prepareStatement(query.toString());
-            preparedStatement.setString(1, date.getString(i));
-            preparedStatement.setString(2, time.getString(i));
-            preparedStatement.setDouble(3, active.getDouble(i));
-            preparedStatement.setDouble(4, passive.getDouble(i));
-            preparedStatement.execute();
+                preparedStatement = connection.prepareStatement(query.toString());
+                preparedStatement.setString(1, date.getString(i));
+                preparedStatement.setString(2, time.getString(i));
+                preparedStatement.setDouble(3, active.getDouble(i));
+                preparedStatement.setDouble(4, passive.getDouble(i));
+                preparedStatement.execute();
+            }
+            else
+                i++;
+        }
+    }
+
+    public void DisplaceDatasForWeek() throws JSONException, SQLException {
+        getDatasFromMeter("week");
+
+        PreparedStatement preparedStatement;
+
+        for (int i = 0; i < date.length(); i++) {
+            if (checkDuplicate(time.getString(i))) {
+                query.append("insert into \"ElectricMeterForWeek\" ")
+                        .append("(id, sysdate, value_active, value_passive)")
+                        .append("values")
+                        .append("(nextval('emw_sequence'), ?, ?, ?");
+
+                preparedStatement = connection.prepareStatement(query.toString());
+                preparedStatement.setString(1, date.getString(i));
+                preparedStatement.setDouble(2, active.getDouble(i));
+                preparedStatement.setDouble(3, passive.getDouble(i));
+                preparedStatement.execute();
             }
             else
                 i++;
@@ -65,7 +92,8 @@ public class DataEntryForDayElectricMeter {
     private boolean checkDuplicate(String date) throws SQLException {
         int i = 0;
         PreparedStatement preparedStatement =
-                connection.prepareStatement("select * from \"ElectricMeterForDay\" where sysdate = ?");
+                connection.prepareStatement("select * from \"ElectricMeterForDay\" " +
+                        "where systime = ?");
         preparedStatement.setString(1, date);
 
         ResultSet resultSet = preparedStatement.executeQuery();

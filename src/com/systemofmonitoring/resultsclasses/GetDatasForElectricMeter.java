@@ -1,5 +1,6 @@
 package com.systemofmonitoring.resultsclasses;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,10 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+public class GetDatasForElectricMeter {
 
-public class GetDatas {
-
-    public GetDatas() {
+    public GetDatasForElectricMeter() {
     }
 
     public static JSONObject getResultFromMeter(Connection connection,
@@ -20,26 +20,45 @@ public class GetDatas {
                                                 String interval) throws JSONException {
         JSONArray dateArray = new JSONArray(),
                 timeArray = new JSONArray(),
-                valueArray = new JSONArray();
-        System.out.println("Yess 4" + " " + interval);
+                activeValueArray = new JSONArray(),
+                passiveValueArray = new JSONArray();
+        double amountActive = 0, amountPassive = 0;
         StringBuilder stringBuilderQuery =
                 new StringBuilder();
-        stringBuilderQuery
-                .append("select * from \"")
-                .append(tableName)
-                .append("\" ")
-                .append("where ")
-                .append(IntervalDetermination(interval));
+        if (interval.equals("amount")) {
+            stringBuilderQuery
+                    .append("select sum(value_active), sum(value_passive)")
+                    .append("from \"")
+                    .append(tableName)
+                    .append("\"");
+        }
+        else {
+            stringBuilderQuery
+                    .append("select * from \"")
+                    .append(tableName)
+                    .append("\" where ")
+                    .append(IntervalDetermination(interval));
+        }
         try {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(stringBuilderQuery.toString());
             ResultSet resultSet =
                     preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                if (resultSet.getString(3) != null) {
-                    dateArray.put(resultSet.getString(2));
-                    timeArray.put(resultSet.getString(3));
-                    valueArray.put(resultSet.getDouble(4));
+            if (!interval.equals("amount")) {
+                while (resultSet.next()) {
+                    if (resultSet.getString(3) != null) {
+                        dateArray.put(resultSet.getString(2));
+                        timeArray.put(resultSet.getString(3));
+                        activeValueArray.put(resultSet.getDouble(4));
+                        passiveValueArray.put(resultSet.getDouble(5));
+                    }
+                }
+            } else {
+                while (resultSet.next()) {
+                    if (resultSet.getString(1) != null) {
+                        amountActive = resultSet.getDouble(1);
+                        amountPassive = resultSet.getDouble(2);
+                    }
                 }
             }
             resultSet.close();
@@ -47,10 +66,21 @@ public class GetDatas {
             e.printStackTrace();
         }
 
-        return new JSONObject()
-                .put("date", dateArray)
-                .put("time", timeArray)
-                .put("value", valueArray);
+        JSONObject resultJSON = new JSONObject();
+        if (!interval.equals("amount")) {
+            resultJSON
+                    .put("date", dateArray)
+                    .put("time", timeArray)
+                    .put("activeValue", activeValueArray)
+                    .put("passiveValue", passiveValueArray);
+        } else {
+            resultJSON
+                    .put("amountActive", amountActive)
+                    .put("amountPassive", amountPassive);
+        }
+
+        return resultJSON;
+
     }
 
     public static JSONObject getResultFromMeter(Connection connection,
@@ -59,8 +89,8 @@ public class GetDatas {
                                                 String date) throws JSONException {
         JSONArray dateArray = new JSONArray(),
                 timeArray = new JSONArray(),
-                valueArray = new JSONArray();
-        System.out.println("Yess 4d" + " " + interval);
+                activeValueArray = new JSONArray(),
+                passiveValueArray = new JSONArray();
         StringBuilder stringBuilderQuery =
                 new StringBuilder();
         stringBuilderQuery
@@ -79,12 +109,14 @@ public class GetDatas {
                     System.out.println("wawdaw" + " " + resultSet.getString(2));
                     dateArray.put(resultSet.getString(2));
                     timeArray.put(resultSet.getString(3));
-                    valueArray.put(resultSet.getDouble(4));
+                    activeValueArray.put(resultSet.getDouble(4));
+                    passiveValueArray.put(resultSet.getDouble(5));
                 }
             }
             System.out.println(dateArray);
             System.out.println(timeArray);
-            System.out.println(valueArray);
+            System.out.println(activeValueArray);
+            System.out.println(passiveValueArray);
             resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,13 +125,15 @@ public class GetDatas {
         return new JSONObject()
                 .put("date", dateArray)
                 .put("time", timeArray)
-                .put("value", valueArray);
+                .put("activeValue", activeValueArray)
+                .put("passiveValue", passiveValueArray);
     }
 
     public static JSONObject DisplaceResultForDay(Connection connection) throws JSONException {
         JSONArray dateArray = new JSONArray(),
                 timeArray = new JSONArray(),
-                valueArray = new JSONArray();
+                activeValueArray = new JSONArray(),
+                passiveValueArray = new JSONArray();
         StringBuilder stringBufferQuery =
                 new StringBuilder();
         stringBufferQuery
@@ -121,12 +155,14 @@ public class GetDatas {
                 if (resultSet.getString(3) != null) {
                     dateArray.put(resultSet.getString(1));
                     timeArray.put(resultSet.getString(2));
-                    valueArray.put(resultSet.getDouble(3));
+                    activeValueArray.put(resultSet.getDouble(3));
+                    passiveValueArray.put(resultSet.getDouble(4));
                 }
                 else {
                     dateArray.put("");
                     timeArray.put("");
-                    valueArray.put("");
+                    activeValueArray.put("");
+                    passiveValueArray.put("");
                 }
             }
             resultSet.close();
@@ -137,13 +173,57 @@ public class GetDatas {
         return new JSONObject()
                 .put("date", dateArray)
                 .put("time", timeArray)
-                .put("value", valueArray);
+                .put("activeValue", activeValueArray)
+                .put("passiveValue", passiveValueArray);
+    }
+
+    public static JSONObject DisplaceResultForWeek(Connection connection) throws JSONException {
+        JSONArray dateArray = new JSONArray(),
+                activeValueArray = new JSONArray(),
+                passiveValueArray = new JSONArray();
+        StringBuilder stringBufferQuery =
+                new StringBuilder();
+        stringBufferQuery
+                .append("select sysdate, " +
+                        "sum(value_active), " +
+                        "sum(value_passive) " +
+                        "from \"ElectricMeterForDay\" ")
+                .append("where ")
+                .append("(sysdate between now()::date - integer '7' and now()::date) ")
+                .append("group by sysdate");
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(stringBufferQuery.toString());
+            ResultSet resultSet =
+                    preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                if (resultSet.getString(3) != null) {
+                    dateArray.put(resultSet.getString(1));
+                    activeValueArray.put(resultSet.getDouble(3));
+                    passiveValueArray.put(resultSet.getDouble(4));
+                }
+                else {
+                    dateArray.put("");
+                    activeValueArray.put("");
+                    passiveValueArray.put("");
+                }
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new JSONObject()
+                .put("date", dateArray)
+                .put("activeValue", activeValueArray)
+                .put("passiveValue", passiveValueArray);
     }
 
     public static JSONObject getResultForDay(Connection connection, String date) throws JSONException {
         JSONArray dateArray = new JSONArray(),
                 timeArray = new JSONArray(),
-                valueArray = new JSONArray();
+                activeValueArray = new JSONArray(),
+                passiveValueArray = new JSONArray();
         StringBuilder stringBufferQuery =
                 new StringBuilder();
         stringBufferQuery
@@ -166,7 +246,8 @@ public class GetDatas {
                 if (resultSet.getString(3) != null) {
                     dateArray.put(resultSet.getString(2));
                     timeArray.put(resultSet.getString(3));
-                    valueArray.put(resultSet.getDouble(4));
+                    activeValueArray.put(resultSet.getDouble(4));
+                    passiveValueArray.put(resultSet.getDouble(5));
                 }
             }
             resultSet.close();
@@ -177,12 +258,12 @@ public class GetDatas {
         return new JSONObject()
                 .put("date", dateArray)
                 .put("time", timeArray)
-                .put("value", valueArray);
+                .put("activeValue", activeValueArray)
+                .put("passiveValue", passiveValueArray);
     }
 
     public static StringBuffer IntervalDetermination(String interval) {
         StringBuffer stringBuffer = new StringBuffer();
-        System.out.println("Yess 5" + " " + interval);
         switch (interval) {
             case "hour":
                 stringBuffer
@@ -216,7 +297,6 @@ public class GetDatas {
     }
 
     public static StringBuilder IntervalDetermination(String interval, String date) {
-        System.out.println("Yess 5d" + " " + interval);
         StringBuilder stringBuilder = new StringBuilder();
         switch (interval) {
             case "hour":
@@ -232,35 +312,36 @@ public class GetDatas {
                         .append("sysdate = date '")
                         .append(date)
                         .append("'");
+                        //.append("(systime between now()::time - (time '24:00') and now()::time)");
                 System.out.println("Day");
                 break;
             case "week":
                 stringBuilder
-                        .append("(sysdate between date '")
+                        .append("sysdate between date '")
                         .append(date)
                         .append("' - integer '7' and date '")
                         .append(date)
-                        .append("')");
+                        .append("'");
                 System.out.println("Week " + date);
                 break;
             case "month":
                 stringBuilder
-                        .append("(sysdate between date '")
-                        .append(date)
-                        .append("' - '1 month'::interval and ")
                         .append("sysdate between date '")
                         .append(date)
-                        .append("')");
+                        .append("' - '1 month'::interval and ")
+                        .append("date '")
+                        .append(date)
+                        .append("'");
                 System.out.println("Month");
                 break;
             case "year":
                 stringBuilder
-                        .append("(sysdate between date '")
-                        .append(date)
-                        .append("' - '1year'::interval and ")
                         .append("sysdate between date '")
                         .append(date)
-                        .append("')");
+                        .append("' - '1year'::interval and ")
+                        .append("date '")
+                        .append(date)
+                        .append("'");
                 System.out.println("Year");
                 break;
         }
