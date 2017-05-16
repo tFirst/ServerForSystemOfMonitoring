@@ -18,6 +18,7 @@ public class GetDatasForElectricMeter {
     public static JSONObject getResultFromMeter(Connection connection,
                                                 String tableName,
                                                 String interval) throws JSONException {
+        System.out.println("Yess 4");
         JSONArray dateArray = new JSONArray(),
                 timeArray = new JSONArray(),
                 activeValueArray = new JSONArray(),

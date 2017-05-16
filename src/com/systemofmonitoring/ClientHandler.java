@@ -28,19 +28,21 @@ public class ClientHandler extends Thread {
             jsonObjectQuery = new JSONObject(sIn.readUTF());
             if (jsonObjectQuery.has("action")) {
                 parseJSONForAdmin(jsonObjectQuery);
-                if (action.equals("get tables"))
-                    if (database.equals("electric"))
-                        jsonObjectResult =
-                                new ConnectToElectricMeterDB().getTablesFromAccess();
-                    else if (database.equals("gas")) {}
+                System.out.println("Admin 1");
+                System.out.println(action.equals("get meters"));
+                if (action.equals("get meters")) {
+                    System.out.println(action);
+                    jsonObjectResult =
+                            new ConnectToPostgreSQL().getMetersNames();
+                }
+                else if (action.equals("get tables"))
+                    jsonObjectResult =
+                            new ConnectToPostgreSQL().getTablesForMeter(database);
                 else if (action.equals("get columns")) {
-                        System.out.println(tableNameAdmin);
-                        if (database.equals("electric"))
-                            jsonObjectResult =
-                                    new ConnectToElectricMeterDB().getColumnsFromTable(tableNameAdmin);
-                        else if (database.equals("gas")) {
-                        }
-                    }
+                    System.out.println(tableNameAdmin);
+                    jsonObjectResult =
+                            new ConnectToPostgreSQL().getColumnsFromTable(tableNameAdmin);
+                }
             }
             else {
                 parseJSONForDatas(jsonObjectQuery);
@@ -74,7 +76,8 @@ public class ClientHandler extends Thread {
     private void parseJSONForAdmin(JSONObject jsonObject) throws JSONException {
         try {
             this.action = jsonObject.getString("action");
-            this.database = jsonObject.getString("database");
+            if (jsonObject.has("database"))
+                this.database = jsonObject.getString("database");
             if (jsonObject.has("tableName"))
                 this.tableNameAdmin = jsonObject.getString("tableName");
         } catch (JSONException je) {
