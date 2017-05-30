@@ -1,6 +1,7 @@
 package com.systemofmonitoring;
 
-import com.systemofmonitoring.workwithdb.DataEntryForDayElectricMeter;
+import com.sun.deploy.ui.DialogTemplate;
+import com.systemofmonitoring.displacedatas.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,10 +14,8 @@ public class Server {
     }
 
     public void start() {
-        DataEntryForDayElectricMeter dataEntryForDayElectricMeter =
-                new DataEntryForDayElectricMeter();
         try {
-            dataEntryForDayElectricMeter.DisplaceDatasForDay();
+            new DisplaceDatas().Displace();
             ServerSocket server = new ServerSocket(3333);
             while (true) {
                 Socket client = server.accept();

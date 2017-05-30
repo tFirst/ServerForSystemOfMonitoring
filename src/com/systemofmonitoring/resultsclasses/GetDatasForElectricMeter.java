@@ -11,10 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GetDatasForElectricMeter {
-
-    public GetDatasForElectricMeter() {
-    }
-
     public static JSONObject getResultFromMeter(Connection connection,
                                                 String tableName,
                                                 String interval) throws JSONException {

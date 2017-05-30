@@ -1,7 +1,7 @@
 package com.systemofmonitoring.connecttodb;
 
-import com.systemofmonitoring.resultsclasses.ResultForElectricMeter;
-import com.systemofmonitoring.resultsclasses.ResultForMeters;
+import com.systemofmonitoring.resultsclasses.GetDatasForElectricMeter;
+import com.systemofmonitoring.resultsclasses.GetDatasForMeters;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,10 +29,10 @@ public class ConnectToPostgreSQL {
         JSONObject jsonObjectResult = new JSONObject();
         if (tableName.contains("Electric"))
             jsonObjectResult =
-                    ResultForElectricMeter.getResultFromMeter(connection, tableName, interval);
+                    GetDatasForElectricMeter.getResultFromMeter(connection, tableName, interval);
         else if (tableName.contains("Gas"))
             jsonObjectResult =
-                    ResultForMeters.getResultFromMeter(connection, tableName, interval);
+                    GetDatasForMeters.getResultFromMeter(connection, tableName, interval);
 
         connection.close();
 
@@ -44,10 +44,10 @@ public class ConnectToPostgreSQL {
         JSONObject jsonObjectResult = new JSONObject();
         if (tableName.contains("Electric"))
             jsonObjectResult =
-                    ResultForElectricMeter.getResultFromMeter(connection, tableName, interval, date);
+                    GetDatasForElectricMeter.getResultFromMeter(connection, tableName, interval, date);
         else if (tableName.contains("Gas"))
             jsonObjectResult =
-                    ResultForMeters.getResultFromMeter(connection, tableName, interval, date);
+                    GetDatasForMeters.getResultFromMeter(connection, tableName, interval, date);
 
         connection.close();
 

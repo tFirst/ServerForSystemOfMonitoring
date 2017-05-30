@@ -1,6 +1,8 @@
-package com.systemofmonitoring.workwithdb;
+package com.systemofmonitoring.displacedatas;
+
 
 import com.systemofmonitoring.connecttodb.ConnectToPostgreSQL;
+import com.systemofmonitoring.displacedatas.DisplaceDataFromMeters;
 import com.systemofmonitoring.resultsclasses.GetDatasForElectricMeter;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,8 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
-public class DataEntryForDayElectricMeter {
+public class DisplaceDataFromElectricMeter extends DisplaceDataFromMeters {
     private Connection connection;
     private static JSONObject jsonObject = new JSONObject();
     JSONArray date, time, active, passive;
@@ -60,8 +61,7 @@ public class DataEntryForDayElectricMeter {
                 preparedStatement.setDouble(3, active.getDouble(i));
                 preparedStatement.setDouble(4, passive.getDouble(i));
                 preparedStatement.execute();
-            }
-            else
+            } else
                 i++;
         }
     }
@@ -83,18 +83,17 @@ public class DataEntryForDayElectricMeter {
                 preparedStatement.setDouble(2, active.getDouble(i));
                 preparedStatement.setDouble(3, passive.getDouble(i));
                 preparedStatement.execute();
-            }
-            else
+            } else
                 i++;
         }
     }
 
-    private boolean checkDuplicate(String date) throws SQLException {
+    private boolean checkDuplicate(String time) throws SQLException {
         int i = 0;
         PreparedStatement preparedStatement =
                 connection.prepareStatement("select * from \"ElectricMeterForDay\" " +
                         "where systime = ?");
-        preparedStatement.setString(1, date);
+        preparedStatement.setString(1, time);
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -103,5 +102,11 @@ public class DataEntryForDayElectricMeter {
         }
 
         return i == 0;
+    }
+
+    @Override
+    public void DoDisplace() throws JSONException, SQLException {
+        DisplaceDatasForDay();
+        DisplaceDatasForWeek();
     }
 }

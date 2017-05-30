@@ -10,11 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class GetDatas {
-
-    public GetDatas() {
-    }
-
+public class GetDatasForMeters {
     public static JSONObject getResultFromMeter(Connection connection,
                                                 String tableName,
                                                 String interval) throws JSONException {

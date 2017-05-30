@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="1134.0" y="80.0">com.systemofmonitoring.displacedatas.DisplaceDataFromPressureMeter</node>
+    <node x="0.0" y="390.0">com.systemofmonitoring.connecttodb.ConnectToElectricMeterDB</node>
+    <node x="447.0" y="465.0">com.systemofmonitoring.resultsclasses.GetDatasForMeters</node>
+    <node x="0.0" y="80.0">com.systemofmonitoring.connecttodb.ConnectToPostgreSQL</node>
+    <node x="390.42999999999995" y="240.0">com.systemofmonitoring.Server</node>
+    <node x="424.99999999999994" y="80.0">com.systemofmonitoring.displacedatas.DisplaceDataFromWaterMeter</node>
+    <node x="228.0" y="465.0">com.systemofmonitoring.connecttodb.ConnectToGasMeterDB</node>
+    <node x="23.5" y="160.0">com.systemofmonitoring.ClientHandler</node>
+    <node x="189.99999999999994" y="80.0">com.systemofmonitoring.displacedatas.DisplaceDataFromElectricMeter</node>
+    <node x="653.0" y="80.0">com.systemofmonitoring.displacedatas.DisplaceDataFromTemperatureMeter</node>
+    <node x="663.51" y="0.0">com.systemofmonitoring.displacedatas.DisplaceDataFromMeters</node>
+    <node x="0.0" y="465.0">com.systemofmonitoring.resultsclasses.GetDatasForElectricMeter</node>
+    <node x="268.0" y="315.0">com.systemofmonitoring.connecttodb.ConnectToPressureMeterDB</node>
+    <node x="0.0" y="315.0">com.systemofmonitoring.connecttodb.ConnectToTemperatureMeterDB</node>
+    <node x="238.0" y="390.0">com.systemofmonitoring.connecttodb.ConnectToWaterMeterDB</node>
+    <node x="714.0" y="160.0">com.systemofmonitoring.displacedatas.DisplaceDatas</node>
+    <node x="918.0" y="80.0">com.systemofmonitoring.displacedatas.DisplaceDataFromGasMeter</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDatas" target="com.systemofmonitoring.displacedatas.DisplaceDataFromPressureMeter">
+      <point x="49.200000000000045" y="-15.0" />
+      <point x="824.7" y="140.0" />
+      <point x="1244.5" y="140.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDataFromElectricMeter" target="com.systemofmonitoring.displacedatas.DisplaceDataFromMeters">
+      <point x="0.0" y="-15.0" />
+      <point x="297.49999999999994" y="50.0" />
+      <point x="681.71" y="50.0" />
+      <point x="-72.79999999999995" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDatas" target="com.systemofmonitoring.displacedatas.DisplaceDataFromWaterMeter">
+      <point x="-24.600000000000023" y="-15.0" />
+      <point x="750.8999999999999" y="130.0" />
+      <point x="529.0" y="130.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDataFromGasMeter" target="com.systemofmonitoring.displacedatas.DisplaceDataFromMeters">
+      <point x="0.0" y="-15.0" />
+      <point x="1016.0" y="60.0" />
+      <point x="790.91" y="60.0" />
+      <point x="36.39999999999998" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.Server" target="com.systemofmonitoring.displacedatas.DisplaceDatas">
+      <point x="20.5" y="-15.0" />
+      <point x="451.92999999999995" y="215.0" />
+      <point x="775.5" y="215.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDatas" target="com.systemofmonitoring.displacedatas.DisplaceDataFromElectricMeter">
+      <point x="-49.200000000000045" y="-15.0" />
+      <point x="726.3" y="140.0" />
+      <point x="297.49999999999994" y="140.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDatas" target="com.systemofmonitoring.displacedatas.DisplaceDataFromTemperatureMeter">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDataFromWaterMeter" target="com.systemofmonitoring.displacedatas.DisplaceDataFromMeters">
+      <point x="0.0" y="-15.0" />
+      <point x="529.0" y="60.0" />
+      <point x="718.11" y="60.0" />
+      <point x="-36.39999999999998" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.Server" target="com.systemofmonitoring.ClientHandler">
+      <point x="-20.5" y="-15.0" />
+      <point x="410.92999999999995" y="215.0" />
+      <point x="85.0" y="215.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDataFromTemperatureMeter" target="com.systemofmonitoring.displacedatas.DisplaceDataFromMeters">
+      <point x="0.0" y="-15.0" />
+      <point x="775.5" y="60.0" />
+      <point x="754.51" y="60.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDatas" target="com.systemofmonitoring.displacedatas.DisplaceDataFromGasMeter">
+      <point x="24.600000000000023" y="-15.0" />
+      <point x="800.0999999999999" y="130.0" />
+      <point x="1016.0" y="130.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.ClientHandler" target="com.systemofmonitoring.connecttodb.ConnectToPostgreSQL">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.displacedatas.DisplaceDataFromPressureMeter" target="com.systemofmonitoring.displacedatas.DisplaceDataFromMeters">
+      <point x="0.0" y="-15.0" />
+      <point x="1244.5" y="50.0" />
+      <point x="827.31" y="50.0" />
+      <point x="72.79999999999995" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.7912727272727272" x="677.5" y="247.5" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
