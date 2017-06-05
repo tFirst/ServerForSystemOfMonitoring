@@ -3,10 +3,9 @@ package com.systemofmonitoring.connecttodb;
 import org.json.JSONObject;
 
 /**
- * Created by Stanislav Trushin on 04.01.2017.
+ * Created by Стас on 04.06.17.
  */
-public class ConnectToGasMeterDB extends ParentConnectToDB {
-    @Override
+public class ParentConnectToDB {
     public JSONObject getDatas() {
         return new JSONObject();
     }

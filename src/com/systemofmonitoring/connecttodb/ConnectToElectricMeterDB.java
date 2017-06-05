@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ConnectToElectricMeterDB {
+public class ConnectToElectricMeterDB extends ParentConnectToDB {
     private File file;
 
     public JSONObject getTablesFromAccess() throws IOException, JSONException {
@@ -31,5 +31,10 @@ public class ConnectToElectricMeterDB {
         }
         return new JSONObject()
                 .put("columns", listJSONObject);
+    }
+
+    @Override
+    public JSONObject getDatas() {
+        return new JSONObject();
     }
 }

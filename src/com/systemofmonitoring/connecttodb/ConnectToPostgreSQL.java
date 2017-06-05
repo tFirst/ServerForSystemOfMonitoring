@@ -1,5 +1,6 @@
 package com.systemofmonitoring.connecttodb;
 
+import com.systemofmonitoring.insertindb.InsertInDBForElectric;
 import com.systemofmonitoring.resultsclasses.GetDatasForElectricMeter;
 import com.systemofmonitoring.resultsclasses.GetDatasForMeters;
 import org.json.JSONArray;
@@ -7,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.*;
+import java.text.ParseException;
 
 
 public class ConnectToPostgreSQL {
@@ -71,50 +73,12 @@ public class ConnectToPostgreSQL {
                 .put("meters", metersNames);
     }
 
-    public JSONObject getTablesForMeter(String database) throws SQLException, JSONException {
-        StringBuilder stringBuilder = new StringBuilder();
-        System.out.println("Yess 3");
-        JSONArray tablesForMeter = new JSONArray();
-        stringBuilder
-                .append("select tablename from pg_tables ")
-                .append("where schemaname = 'public' and tablename like '")
-                .append(database)
-                .append("%'");
-        PreparedStatement preparedStatement =
-                connection.prepareStatement(stringBuilder.toString());
-        ResultSet resultSet =
-                preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            tablesForMeter.put(resultSet.getString(1));
+    public JSONObject insertInDatabase(String meterName, JSONObject data) throws JSONException, ParseException {
+        String answer = "";
+        if (meterName.contains("Electric")) {
+            answer = new InsertInDBForElectric().insert(connection, meterName, data);
         }
-
-        connection.close();
-
         return new JSONObject()
-                .put("tables", tablesForMeter);
+                .put("answer", answer);
     }
-
-    public JSONObject getColumnsFromTable(String tableName) throws SQLException, JSONException {
-        StringBuilder stringBuilder = new StringBuilder();
-        System.out.println("Yess 3");
-        JSONArray columnsForTable = new JSONArray();
-        stringBuilder
-                .append("select column_name from information_schema.columns ")
-                .append("where table_schema = 'public' and table_name like '")
-                .append(tableName)
-                .append("'");
-        PreparedStatement preparedStatement =
-                connection.prepareStatement(stringBuilder.toString());
-        ResultSet resultSet =
-                preparedStatement.executeQuery();
-        while (resultSet.next()) {
-            columnsForTable.put(resultSet.getString(1));
-        }
-
-        connection.close();
-
-        return new JSONObject()
-                .put("columns", columnsForTable);
-    }
-
 }

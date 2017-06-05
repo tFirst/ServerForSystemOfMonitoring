@@ -6,11 +6,22 @@ import java.sql.SQLException;
 
 
 public class DisplaceDatas {
+    private DisplaceDataFromElectricMeter displaceDataFromElectricMeter =
+            new DisplaceDataFromElectricMeter();
+    private DisplaceDataFromGasMeter displaceDataFromGasMeter =
+            new DisplaceDataFromGasMeter();
+    private DisplaceDataFromWaterMeter displaceDataFromWaterMeter =
+            new DisplaceDataFromWaterMeter();
+    private DisplaceDataFromPressureMeter displaceDataFromPressureMeter =
+            new DisplaceDataFromPressureMeter();
+    private DisplaceDataFromTemperatureMeter displaceDataFromTemperatureMeter =
+            new DisplaceDataFromTemperatureMeter();
+
     public void Displace() throws JSONException, SQLException {
-        new DisplaceDataFromElectricMeter().DoDisplace();
-        new DisplaceDataFromGasMeter().DoDisplace();
-        new DisplaceDataFromWaterMeter().DoDisplace();
-        new DisplaceDataFromPressureMeter().DoDisplace();
-        new DisplaceDataFromTemperatureMeter().DoDisplace();
+        displaceDataFromElectricMeter.DoDisplace();
+        displaceDataFromGasMeter.DoDisplace();
+        displaceDataFromWaterMeter.DoDisplace();
+        displaceDataFromPressureMeter.DoDisplace();
+        displaceDataFromTemperatureMeter.DoDisplace();
     }
 }

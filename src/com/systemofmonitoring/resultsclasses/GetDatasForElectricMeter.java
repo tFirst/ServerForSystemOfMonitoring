@@ -1,6 +1,7 @@
 package com.systemofmonitoring.resultsclasses;
 
 
+import com.systemofmonitoring.connecttodb.ConnectToPostgreSQL;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

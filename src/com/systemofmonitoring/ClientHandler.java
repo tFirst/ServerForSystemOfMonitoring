@@ -5,6 +5,7 @@ import com.systemofmonitoring.connecttodb.ConnectToPostgreSQL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.sound.midi.Soundbank;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -14,8 +15,8 @@ public class ClientHandler extends Thread {
     private DataOutputStream sOut;
     private DataInputStream sIn;
     private Socket client;
-    private String tableName, interval, date, action, database, tableNameAdmin;
-    private JSONObject jsonObjectQuery, jsonObjectResult;
+    private String tableName, interval, date, action, meterName;
+    private JSONObject jsonObjectQuery, jsonObjectResult, dataForInsert;
 
     public ClientHandler(Socket client) {
         this.client = client;
@@ -27,21 +28,16 @@ public class ClientHandler extends Thread {
             sOut = new DataOutputStream(client.getOutputStream());
             jsonObjectQuery = new JSONObject(sIn.readUTF());
             if (jsonObjectQuery.has("action")) {
-                parseJSONForAdmin(jsonObjectQuery);
-                System.out.println("Admin 1");
-                System.out.println(action.equals("get meters"));
+                parseJSONForAction(jsonObjectQuery);
                 if (action.equals("get meters")) {
                     System.out.println(action);
                     jsonObjectResult =
                             new ConnectToPostgreSQL().getMetersNames();
                 }
-                else if (action.equals("get tables"))
+                else if (action.equals("insert")) {
+                    System.out.println(action);
                     jsonObjectResult =
-                            new ConnectToPostgreSQL().getTablesForMeter(database);
-                else if (action.equals("get columns")) {
-                    System.out.println(tableNameAdmin);
-                    jsonObjectResult =
-                            new ConnectToPostgreSQL().getColumnsFromTable(tableNameAdmin);
+                            new ConnectToPostgreSQL().insertInDatabase(meterName, dataForInsert);
                 }
             }
             else {
@@ -73,13 +69,13 @@ public class ClientHandler extends Thread {
         System.out.println(tableName + " " + interval + " " + date);
     }
 
-    private void parseJSONForAdmin(JSONObject jsonObject) throws JSONException {
+    private void parseJSONForAction(JSONObject jsonObject) throws JSONException {
         try {
-            this.action = jsonObject.getString("action");
-            if (jsonObject.has("database"))
-                this.database = jsonObject.getString("database");
-            if (jsonObject.has("tableName"))
-                this.tableNameAdmin = jsonObject.getString("tableName");
+            action = jsonObject.getString("action");
+            if (jsonObject.has("meter"))
+                meterName = jsonObject.getString("meter");
+            if (jsonObject.has("data"))
+                dataForInsert = jsonObject.getJSONObject("data");
         } catch (JSONException je) {
             je.printStackTrace();
         }
