@@ -81,4 +81,29 @@ public class ConnectToPostgreSQL {
         return new JSONObject()
                 .put("answer", answer);
     }
+
+    public JSONObject getResourcesTypes() throws SQLException, JSONException {
+        System.out.println("Yess 3");
+        JSONArray resourcesTypes = new JSONArray();
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("select type from \"MetersTypes\"");
+        ResultSet resultSet =
+                preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            resourcesTypes.put(resultSet.getString(1));
+        }
+
+        connection.close();
+
+        return new JSONObject()
+                .put("resources", resourcesTypes);
+    }
+
+    public JSONObject getResultForResource(String resourceName, String interval) {
+        return null;
+    }
+
+    public JSONObject getResultForResource(String resourceName, String interval, String date) {
+        return null;
+    }
 }

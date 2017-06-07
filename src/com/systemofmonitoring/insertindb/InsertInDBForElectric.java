@@ -10,15 +10,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class InsertInDBForElectric {
+public class InsertInDBForElectric extends InsertInDB {
     public String insert(Connection connection, String meterName, JSONObject data) throws JSONException, ParseException {
         JSONArray
                 date = data.getJSONArray("date"),
             time = data.getJSONArray("time"),
             active = data.getJSONArray("active"),
             passive = data.getJSONArray("passive");
-        String answer = "OK";
+        String answer = "Внесение данных в базу выполнено успешно";
         String tableName = getTableName(connection, meterName);
+        Integer countTwins = 0;
 
         for (int i = 0; i < date.length(); i++) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
@@ -32,7 +33,6 @@ public class InsertInDBForElectric {
                         .append(tableName)
                         .append("\"")
                         .append("values(nextval('em_sequence'), ?, ?, ?, ?)");
-
                 try {
                     PreparedStatement preparedStatement =
                             connection.prepareStatement(stringBuilderQuery.toString());
@@ -43,12 +43,18 @@ public class InsertInDBForElectric {
                     preparedStatement.execute();
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    answer = "LOSE";
+                    answer = "Внесение данных в базу не выполнено\nПроизошла ошибка";
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
+            else
+                countTwins++;
         }
+        if (countTwins != date.length())
+            answer += ": " + (date.length() - countTwins) + "\nДубликатов: " + countTwins;
+        else
+            answer = "Внесение данных в базу не выполнено\nВносимые данные уже содержатся в базе";
         return answer;
     }
 
@@ -98,7 +104,8 @@ public class InsertInDBForElectric {
         return tableName;
     }
 
-    private Boolean checkInput(Connection connection, String tableName, Date date, Time time) {
+    @Override
+    protected Boolean checkInput(Connection connection, String tableName, Date date, Time time) {
         Boolean flag = true;
         StringBuilder stringBuilderQuery = new StringBuilder();
         stringBuilderQuery

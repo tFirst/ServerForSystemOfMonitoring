@@ -85,6 +85,7 @@ public class GetDatasForElectricMeter {
                                                 String tableName,
                                                 String interval,
                                                 String date) throws JSONException {
+        System.out.println(tableName + " awdawdawd");
         JSONArray dateArray = new JSONArray(),
                 timeArray = new JSONArray(),
                 activeValueArray = new JSONArray(),
@@ -104,11 +105,15 @@ public class GetDatasForElectricMeter {
                     preparedStatement.executeQuery();
             while (resultSet.next()) {
                 if (resultSet.getString(2) != null) {
-                    System.out.println("wawdaw" + " " + resultSet.getString(2));
                     dateArray.put(resultSet.getString(2));
-                    timeArray.put(resultSet.getString(3));
-                    activeValueArray.put(resultSet.getDouble(4));
-                    passiveValueArray.put(resultSet.getDouble(5));
+                    if (interval.equals("day")) {
+                        timeArray.put(resultSet.getString(3));
+                        activeValueArray.put(resultSet.getDouble(4));
+                        passiveValueArray.put(resultSet.getDouble(5));
+                    } else {
+                        activeValueArray.put(resultSet.getDouble(3));
+                        passiveValueArray.put(resultSet.getDouble(4));
+                    }
                 }
             }
             System.out.println(dateArray);
@@ -140,10 +145,8 @@ public class GetDatasForElectricMeter {
                         "sum(value_active), " +
                         "sum(value_passive) " +
                         "from \"ElectricMeter\" ")
-                .append("where ")
-                .append("sysdate = now()::date and ")
-                .append("extract(hour from systime) = extract(hour from systime)")
-                .append("group by sysdate, extract(hour from systime)");
+                .append("group by sysdate, systime ")
+                .append("order by sysdate asc, systime asc");
         try {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(stringBufferQuery.toString());
@@ -186,9 +189,8 @@ public class GetDatasForElectricMeter {
                         "sum(value_active), " +
                         "sum(value_passive) " +
                         "from \"ElectricMeterForDay\" ")
-                .append("where ")
-                .append("(sysdate between now()::date - integer '7' and now()::date) ")
-                .append("group by sysdate");
+                .append("group by sysdate ")
+                .append("order by sysdate asc");
         try {
             PreparedStatement preparedStatement =
                     connection.prepareStatement(stringBufferQuery.toString());
@@ -197,8 +199,8 @@ public class GetDatasForElectricMeter {
             while (resultSet.next()) {
                 if (resultSet.getString(3) != null) {
                     dateArray.put(resultSet.getString(1));
-                    activeValueArray.put(resultSet.getDouble(3));
-                    passiveValueArray.put(resultSet.getDouble(4));
+                    activeValueArray.put(resultSet.getDouble(2));
+                    passiveValueArray.put(resultSet.getDouble(3));
                 }
                 else {
                     dateArray.put("");
@@ -277,7 +279,7 @@ public class GetDatasForElectricMeter {
                 break;
             case "week":
                 stringBuffer
-                        .append("(sysdate between now()::date - integer '7' and now()::date)");
+                        .append("(sysdate between now()::date - integer '6' and now()::date)");
                 System.out.println("Week");
                 break;
             case "month":
@@ -310,14 +312,13 @@ public class GetDatasForElectricMeter {
                         .append("sysdate = date '")
                         .append(date)
                         .append("'");
-                        //.append("(systime between now()::time - (time '24:00') and now()::time)");
                 System.out.println("Day");
                 break;
             case "week":
                 stringBuilder
                         .append("sysdate between date '")
                         .append(date)
-                        .append("' - integer '7' and date '")
+                        .append("' - integer '6' and '")
                         .append(date)
                         .append("'");
                 System.out.println("Week " + date);

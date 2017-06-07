@@ -6,6 +6,7 @@ import com.systemofmonitoring.displacedatas.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 
 
 public class Server {
@@ -14,13 +15,16 @@ public class Server {
     private ConnectToDB connectToDB =
             new ConnectToDB();
 
-    public static void main(String[] args) {
+    public Server() throws SQLException {
+    }
+
+    public static void main(String[] args) throws SQLException {
         new Server().start();
     }
 
     public void start() {
         try {
-            //displaceDatas.Displace();
+            displaceDatas.Displace();
             //connectToDB.Connect();
             ServerSocket server = new ServerSocket(3333);
             while (true) {

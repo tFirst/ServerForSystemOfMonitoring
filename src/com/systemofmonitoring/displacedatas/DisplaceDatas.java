@@ -3,6 +3,7 @@ package com.systemofmonitoring.displacedatas;
 import org.json.JSONException;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 
 
 public class DisplaceDatas {
@@ -17,11 +18,14 @@ public class DisplaceDatas {
     private DisplaceDataFromTemperatureMeter displaceDataFromTemperatureMeter =
             new DisplaceDataFromTemperatureMeter();
 
-    public void Displace() throws JSONException, SQLException {
+    public DisplaceDatas() throws SQLException {
+    }
+
+    public void Displace() throws JSONException, SQLException, ParseException {
         displaceDataFromElectricMeter.DoDisplace();
-        displaceDataFromGasMeter.DoDisplace();
+        /**displaceDataFromGasMeter.DoDisplace();
         displaceDataFromWaterMeter.DoDisplace();
         displaceDataFromPressureMeter.DoDisplace();
-        displaceDataFromTemperatureMeter.DoDisplace();
+        displaceDataFromTemperatureMeter.DoDisplace();*/
     }
 }
