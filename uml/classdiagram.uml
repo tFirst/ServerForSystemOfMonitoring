@@ -3,22 +3,107 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="0.0" y="0.0">com.systemofmonitoring.connecttodb.ConnectToPostgreSQL</node>
-    <node x="44.0" y="160.0">com.systemofmonitoring.Server</node>
-    <node x="23.5" y="80.0">com.systemofmonitoring.ClientHandler</node>
+    <node x="190.0" y="160.0">com.systemofmonitoring.connecttodb.ConnectToElectricMeterDB</node>
+    <node x="1046.0" y="160.0">com.systemofmonitoring.connecttodb.ConnectToPressureMeterDB</node>
+    <node x="0.0" y="160.0">com.systemofmonitoring.connecttodb.ConnectToPostgreSQL</node>
+    <node x="648.5" y="350.0">com.systemofmonitoring.Server</node>
+    <node x="852.0" y="160.0">com.systemofmonitoring.connecttodb.ConnectToGasMeterDB</node>
+    <node x="609.0" y="160.0">com.systemofmonitoring.connecttodb.ConnectToTemperatureMeterDB</node>
+    <node x="33.0" y="0.0">com.systemofmonitoring.insertindb.InsertInDB</node>
+    <node x="646.5854166666667" y="80.0">com.systemofmonitoring.connecttodb.ParentConnectToDB</node>
+    <node x="403.0" y="160.0">com.systemofmonitoring.connecttodb.ConnectToWaterMeterDB</node>
+    <node x="658.5" y="270.0">com.systemofmonitoring.connecttodb.ConnectToDB</node>
+    <node x="5.5" y="80.0">com.systemofmonitoring.insertindb.InsertInDBForElectric</node>
+    <node x="23.5" y="270.0">com.systemofmonitoring.ClientHandler</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="com.systemofmonitoring.Server" target="com.systemofmonitoring.ClientHandler">
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToDB" target="com.systemofmonitoring.connecttodb.ConnectToTemperatureMeterDB">
+      <point x="-6.2000000000000455" y="-15.0" />
+      <point x="714.3" y="210.0" />
+      <point x="664.75" y="210.0" />
+      <point x="-55.75" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToDB" target="com.systemofmonitoring.connecttodb.ConnectToGasMeterDB">
+      <point x="18.600000000000023" y="-15.0" />
+      <point x="739.1" y="220.0" />
+      <point x="895.5" y="220.0" />
+      <point x="-43.5" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToDB" target="com.systemofmonitoring.connecttodb.ConnectToPressureMeterDB">
+      <point x="55.799999999999955" y="-15.0" />
+      <point x="776.3" y="250.0" />
+      <point x="1195.25" y="250.0" />
+      <point x="49.75" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToDB" target="com.systemofmonitoring.connecttodb.ConnectToElectricMeterDB">
+      <point x="-55.80000000000007" y="-15.0" />
+      <point x="664.6999999999999" y="250.0" />
+      <point x="238.25" y="250.0" />
+      <point x="-48.25" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToPostgreSQL" target="com.systemofmonitoring.insertindb.InsertInDBForElectric">
       <point x="0.0" y="-15.0" />
       <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToWaterMeterDB" target="com.systemofmonitoring.connecttodb.ParentConnectToDB">
+      <point x="0.0" y="-15.0" />
+      <point x="496.0" y="140.0" />
+      <point x="693.9854166666667" y="140.0" />
+      <point x="-31.600000000000023" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToTemperatureMeterDB" target="com.systemofmonitoring.connecttodb.ParentConnectToDB">
+      <point x="0.0" y="-15.0" />
+      <point x="720.5" y="140.0" />
+      <point x="725.5854166666667" y="140.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToPressureMeterDB" target="com.systemofmonitoring.connecttodb.ParentConnectToDB">
+      <point x="0.0" y="-15.0" />
+      <point x="1145.5" y="130.0" />
+      <point x="788.7854166666666" y="130.0" />
+      <point x="63.19999999999993" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToDB" target="com.systemofmonitoring.connecttodb.ConnectToWaterMeterDB">
+      <point x="-31.0" y="-15.0" />
+      <point x="689.5" y="230.0" />
+      <point x="449.5" y="230.0" />
+      <point x="-46.5" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToGasMeterDB" target="com.systemofmonitoring.connecttodb.ParentConnectToDB">
+      <point x="0.0" y="-15.0" />
+      <point x="939.0" y="140.0" />
+      <point x="757.1854166666667" y="140.0" />
+      <point x="31.600000000000023" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.insertindb.InsertInDBForElectric" target="com.systemofmonitoring.insertindb.InsertInDB">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.connecttodb.ConnectToElectricMeterDB" target="com.systemofmonitoring.connecttodb.ParentConnectToDB">
+      <point x="0.0" y="-15.0" />
+      <point x="286.5" y="130.0" />
+      <point x="662.3854166666666" y="130.0" />
+      <point x="-63.200000000000045" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.Server" target="com.systemofmonitoring.ClientHandler">
+      <point x="-27.33333333333337" y="-15.0" />
+      <point x="662.1666666666666" y="325.0" />
+      <point x="85.0" y="325.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.systemofmonitoring.Server" target="com.systemofmonitoring.connecttodb.ConnectToDB">
+      <point x="27.33333333333337" y="-15.0" />
+      <point x="716.8333333333334" y="325.0" />
+      <point x="751.5" y="325.0" />
+      <point x="31.0" y="15.0" />
     </edge>
     <edge source="com.systemofmonitoring.ClientHandler" target="com.systemofmonitoring.connecttodb.ConnectToPostgreSQL">
       <point x="0.0" y="-15.0" />
       <point x="0.0" y="15.0" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="85.0" y="95.0" />
+  <settings layout="Hierarchic Group" zoom="0.8940711462450592" x="622.5" y="190.0" />
   <SelectedNodes />
   <Categories />
   <SCOPE>All</SCOPE>
